@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Map {
+
     public List<Point> points;
     public List<Segment> segments;
 
@@ -16,4 +17,5 @@ public class Map {
         this.points = points;
         this.segments = segments;
     }
+
 }

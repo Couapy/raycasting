@@ -37,4 +37,9 @@ public class Segment {
         return "[" + a + ", " + b + "]";
     }
 
+	public double getAngle() {
+        Point vertex = getVertex();
+		return Math.atan2(vertex.y, vertex.x);
+	}
+
 }
