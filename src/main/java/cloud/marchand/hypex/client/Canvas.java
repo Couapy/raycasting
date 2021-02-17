@@ -8,16 +8,16 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class Canvas extends JPanel {
 
-    public static final int POINT_WIDTH = 10;
+    public static final int POV_WIDTH = 10;
+    public static final int POV_ANGLE_LENGTH = 50;
     public static final double ANGLE_THRESHOLD = 0.0001;
 
-    public Point mouse = null;
     private Map map;
+    public Pov pov;
 
-    public Canvas(Map map) {
-        this.mouse = new Point(getWidth() / 2d, getHeight() / 2d);
+    public Canvas(Map map, Pov pov) {
         this.map = map;
-        addMouseMotionListener(new MouseListener(this));
+        this.pov = pov;
     }
 
     @Override
@@ -32,39 +32,41 @@ public class Canvas extends JPanel {
         }
 
         for (Point point : map.points) {
-            Segment seg = new Segment(mouse, point);
+            Segment seg = new Segment(pov, point);
             double angle = seg.getAngle();
             drawRay(graphics, point);
             drawRay(graphics, angle + ANGLE_THRESHOLD);
             drawRay(graphics, angle - ANGLE_THRESHOLD);
         }
-        // Draw mouse
+        // Draw pov
+        graphics.setColor(Color.GREEN);
+        graphics.drawLine((int) pov.x, (int) pov.y, (int) (pov.x + Math.cos(pov.angle) * POV_ANGLE_LENGTH),
+                (int) (pov.y + Math.sin(pov.angle) * POV_ANGLE_LENGTH));
         graphics.setColor(Color.RED);
-        graphics.fillOval((int) (mouse.x - POINT_WIDTH / 2d), (int) (mouse.y - POINT_WIDTH / 2d), POINT_WIDTH,
-                POINT_WIDTH);
+        graphics.fillOval((int) (pov.x - POV_WIDTH / 2d), (int) (pov.y - POV_WIDTH / 2d), POV_WIDTH, POV_WIDTH);
     }
 
     private void drawRay(Graphics graphics, double angle) {
-        Point point = new Point(mouse.x + Math.cos(angle), mouse.y + Math.sin(angle));
+        Point point = new Point(pov.x + Math.cos(angle), pov.y + Math.sin(angle));
         drawRay(graphics, point);
     }
 
     private void drawRay(Graphics graphics, Point point) {
-        Segment ray = new Segment(mouse, point);
+        Segment ray = new Segment(pov, point);
         Point closest = null;
-        
+
         for (Segment segment : map.segments) {
             Point intersect = segment.intersect(ray);
             if (intersect == null) {
                 continue;
             }
-            if (closest == null || intersect.distance(mouse) < closest.distance(mouse)) {
+            if (closest == null || intersect.distance(pov) < closest.distance(pov)) {
                 closest = intersect;
             }
         }
         if (closest != null) {
             graphics.setColor(Color.RED);
-            graphics.drawLine((int) (mouse.x), (int) (mouse.y), (int) (closest.x), (int) (closest.y));
+            graphics.drawLine((int) (pov.x), (int) (pov.y), (int) (closest.x), (int) (closest.y));
         }
     }
 

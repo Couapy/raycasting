@@ -1,6 +1,7 @@
 package cloud.marchand.hypex.client;
 
 public class Point {
+
     public double x;
     public double y;
 
