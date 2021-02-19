@@ -11,6 +11,7 @@ public class Map {
 
     public List<Point> points;
     public List<Segment> segments;
+    public Point origin = null;
 
     protected Map() {
         points = new ArrayList<>();
@@ -37,6 +38,8 @@ public class Map {
             } else if (indicator.equals("s")) {
                 map.segments.add(new Segment(map.points.get(Integer.parseInt(arguments[0])),
                         map.points.get(Integer.parseInt(arguments[1]))));
+            } else if (indicator.equals("o")) {
+                map.origin = new Point(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
             }
         }
 

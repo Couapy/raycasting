@@ -12,9 +12,16 @@ public class Pov extends Point {
      */
     public double fov;
 
-    public Pov(double x, double y, double angle) {
+    public Pov(double x, double y, double angle, double fov) {
         super(x, y);
         this.angle = angle;
+        this.fov = fov;
+    }
+
+    public Pov(Point point) {
+        super(point.x, point.y);
+        angle = 0d;
+        fov = Math.PI / 2;
     }
 
     @Override

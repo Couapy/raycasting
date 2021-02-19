@@ -2,6 +2,7 @@ package cloud.marchand.hypex.client;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -12,7 +13,7 @@ public class Canvas extends JPanel {
     public static final int POV_ANGLE_LENGTH = 50;
     public static final double ANGLE_THRESHOLD = 0.0001;
 
-    private Map map;
+    protected Map map;
     public Pov pov;
 
     public Canvas(Map map, Pov pov) {
@@ -52,6 +53,14 @@ public class Canvas extends JPanel {
     }
 
     private void drawRay(Graphics graphics, Point point) {
+        Point projection = getProjection(point);
+        if (projection != null) {
+            graphics.setColor(Color.RED);
+            graphics.drawLine((int) (pov.x), (int) (pov.y), (int) (projection.x), (int) (projection.y));
+        }
+    }
+
+    protected Point getProjection(Point point) {
         Segment ray = new Segment(pov, point);
         Point closest = null;
 
@@ -60,14 +69,11 @@ public class Canvas extends JPanel {
             if (intersect == null) {
                 continue;
             }
-            if (closest == null || intersect.distance(pov) < closest.distance(pov)) {
+            if (closest == null || intersect.distanceFrom(pov) < closest.distanceFrom(pov)) {
                 closest = intersect;
             }
         }
-        if (closest != null) {
-            graphics.setColor(Color.RED);
-            graphics.drawLine((int) (pov.x), (int) (pov.y), (int) (closest.x), (int) (closest.y));
-        }
+        return closest;
     }
 
 }
